@@ -15,35 +15,29 @@ namespace HitSupport
         [SerializeField]
         private Vector3 _offset = Vector3.zero;
 
-        private Transform _origin = null;
-
         private int _previousFrameCount = default;
         private RaycastHit _cachedRaycastHit = default;
         private bool _cachedIsHit = default;
 
-        public void Init(Transform origin)
-        {
-            _origin = origin;
-        }
 
-        public bool IsHit()
+        public bool IsHit(Transform origin)
         {
             if (_previousFrameCount != Time.frameCount)
             {
                 _previousFrameCount = Time.frameCount;
-                return _cachedIsHit = Physics.Raycast(_origin.position + _offset, _origin.rotation * _dir, _maxDistance, _targetLayer);
+                return _cachedIsHit = Physics.Raycast(origin.position + _offset, origin.rotation * _dir, _maxDistance, _targetLayer);
             }
             else
             {
                 return _cachedIsHit;
             }
         }
-        public bool IsHit(out RaycastHit result)
+        public bool IsHit(Transform origin, out RaycastHit result)
         {
             if (_previousFrameCount != Time.frameCount)
             {
                 _previousFrameCount = Time.frameCount;
-                var isHit = Physics.Raycast(_origin.position + _offset, _origin.rotation * _dir, out result, _maxDistance, _targetLayer);
+                var isHit = Physics.Raycast(origin.position + _offset, origin.rotation * _dir, out result, _maxDistance, _targetLayer);
                 _cachedRaycastHit = result;
                 return _cachedIsHit = isHit;
             }

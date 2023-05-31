@@ -1,0 +1,5 @@
+﻿ID（メモ）,名前,説明文,EffectType,TargetType,Item Effect Filterの Addressable name,,,メモ : 機能等は呼び出される側がアイテム使用時の処理を登録する。種類を追加した際は、ItemDataBase.csのMaxIDを変更する。
+0,ヒールポーション,一般的な回復アイテム。使用者の体力を20%回復させる。,Healing,ToSelf,,,,
+1,炎の奇石,炎をまき散らす奇石。使用者の周囲の相手に30ダメージを与える。,Attack,ToArea,,,,
+2,プロテイン,通常のプロテイン。30秒間、攻撃力が50%上昇する。,Support,ToSelf,,,,
+3,謎の鍵,託された。,Valuables,ToTarget,,,,

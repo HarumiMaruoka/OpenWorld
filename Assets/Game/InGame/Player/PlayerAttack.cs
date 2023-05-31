@@ -18,15 +18,24 @@ public class PlayerAttack : MonoBehaviour
     {
         _info = GetComponent<PlayerInfo>();
 
+    }
+    private void Start()
+    {
         _info.Inputs.Player.Fire.started += Fire;
     }
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        _attackArea.OnDrawGizmos(transform);
+    }
+#endif
 
     private void Fire(InputAction.CallbackContext callbackContext)
     {
         if (!_info.IsGrounded.Value) return; // 空中では攻撃しない
 
         _isAttacking.Value = true;
-        _info.CanMove = false;
+        _info.AddState(PlayerState.Attack);
     }
 
     /// <summary>
@@ -51,6 +60,6 @@ public class PlayerAttack : MonoBehaviour
     public void AttackEnd()
     {
         _isAttacking.Value = false;
-        _info.CanMove = true;
+        _info.RemoveState(PlayerState.Attack);
     }
 }

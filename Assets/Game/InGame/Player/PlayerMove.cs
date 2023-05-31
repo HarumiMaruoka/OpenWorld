@@ -1,6 +1,7 @@
 // 日本語対応
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerInfo))]
@@ -14,6 +15,8 @@ public class PlayerMove : MonoBehaviour
     private float _maxHorizontalSpeed = 0f;
     [SerializeField]
     private float _maxVerticalSpeed = 0f;
+    [SerializeField]
+    private float _landingTime = 1f;
 
     private CharacterController _characterController = null;
     private PlayerInfo _playerInfo = null;
@@ -30,10 +33,36 @@ public class PlayerMove : MonoBehaviour
     public float MaxHorizontalSpeed => _maxHorizontalSpeed;
     public float MaxVerticalSpeed => _maxVerticalSpeed;
 
+    public bool CanRun
+    {
+        // 移動可能かどうかを判定する 条件式をまとめて記述するところ
+        // 攻撃中は移動できない
+        // 着地中は移動できない
+        // 会話中は移動できない
+        get
+        {
+            return
+                !_playerInfo.CurrentState.Value.HasFlag(PlayerState.Attack) &&
+                !_playerInfo.CurrentState.Value.HasFlag(PlayerState.Land) &&
+                !_playerInfo.CurrentState.Value.HasFlag(PlayerState.Talk);
+        }
+    }
+    public bool CanJump
+    {
+        get
+        {
+            return
+                !_playerInfo.CurrentState.Value.HasFlag(PlayerState.Attack) &&
+                !_playerInfo.CurrentState.Value.HasFlag(PlayerState.Land) &&
+                !_playerInfo.CurrentState.Value.HasFlag(PlayerState.Talk);
+        }
+    }
+
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
         _playerInfo = GetComponent<PlayerInfo>();
+        _playerInfo.IsGrounded.Subscribe(value => { if (value) Landed(); }); // 着地を検知し、着地時処理を呼び出す。
     }
 
     private void Update()
@@ -53,8 +82,8 @@ public class PlayerMove : MonoBehaviour
                 _currentVerticalSpeed.Value = -_maxVerticalSpeed;
             }
         }
-        // 接地している かつ ジャンプ入力があればジャンプする。
-        else if (_playerInfo.Inputs.Player.Jump.IsPressed())
+        // 接地している かつ ジャンプ入力があればジャンプする。着地中は無効
+        else if (_playerInfo.Inputs.Player.Jump.IsPressed() && CanJump)
         {
             _currentVerticalSpeed.Value = _playerInfo.JumpPower;
         }
@@ -65,7 +94,7 @@ public class PlayerMove : MonoBehaviour
         }
 
         // 水平方向の制御
-        if (moveInput.sqrMagnitude > 0.3f && _playerInfo.CanMove)
+        if (moveInput.sqrMagnitude > 0.3f && CanRun)
         {
             // 入力がある限り加速する
             _currentHorizontalSpeed.Value +=
@@ -77,10 +106,9 @@ public class PlayerMove : MonoBehaviour
 
             // 入力方向を保存する
             _cachedDir = new Vector3(moveInput.x, 0f, moveInput.y);
-
+            _cachedDir = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * _cachedDir;
             // 回転の制御
             // メインカメラを基準に方向を指定する。
-            _cachedDir = Camera.main.transform.TransformDirection(_cachedDir);
             _targetRotation = Quaternion.LookRotation(_cachedDir, Vector3.up);
             _targetRotation.x = 0f;
             _targetRotation.z = 0f;
@@ -102,5 +130,19 @@ public class PlayerMove : MonoBehaviour
         moveSpeed.y = _currentVerticalSpeed.Value * Time.deltaTime;
 
         _characterController.Move(moveSpeed);
+    }
+    [SerializeField]
+    private float _landInterval = 0.6f;
+
+    public bool IsLnadIntervalNow { get; private set; } = false;
+    private async void Landed()
+    {
+        if (IsLnadIntervalNow) return;
+        _playerInfo.AddState(PlayerState.Land);
+        await UniTask.Delay((int)(_landingTime * 1000f));
+        IsLnadIntervalNow = true;
+        _playerInfo.RemoveState(PlayerState.Land);
+        await UniTask.Delay((int)(_landInterval * 1000f));
+        IsLnadIntervalNow = false;
     }
 }

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
+using System;
 
 public class PlayerAnimationController : MonoBehaviour
 {
@@ -9,8 +10,6 @@ public class PlayerAnimationController : MonoBehaviour
     private string _moveSpeedParam = default;
     [AnimationParameter, SerializeField]
     private string _attackParam = default;
-    [AnimationParameter, SerializeField]
-    private string _jumpParam = default;
     [AnimationParameter, SerializeField]
     private string _midairParam = default;
 
@@ -32,15 +31,25 @@ public class PlayerAnimationController : MonoBehaviour
         _attack.IsAttacking.Subscribe(value =>
             _animator.SetBool(_attackParam, value));
 
-        _info.IsGrounded.Subscribe(async value =>
-            {
-                _animator.SetBool(_midairParam, !value);
-                if (!value)
-                {
-                    _animator.SetBool(_jumpParam, true);
-                    await UniTask.DelayFrame(1);
-                    _animator.SetBool(_jumpParam, false);
-                }
-            });
+        _info.IsGrounded.Subscribe(value =>
+            _animator.SetBool(_midairParam, !value));
+    }
+
+    /// <summary>
+    /// アニメーションをUnityEventで制御する用のメソッド
+    /// </summary>
+    public void SetAnimationParam(string animParamName)
+    {
+        _animator.SetBool(animParamName, true);
+    }
+    public void UnsetAnimationParam(string animParamName)
+    {
+        _animator.SetBool(animParamName, false);
+    }
+    public async void SetAnimationParamOneFrame(string animParamName)
+    {
+        _animator.SetBool(animParamName, true);
+        await UniTask.Yield();
+        _animator.SetBool(animParamName, false);
     }
 }

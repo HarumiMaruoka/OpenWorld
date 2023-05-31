@@ -2,9 +2,11 @@ DOTween (HOTween v2)
 https://assetstore.unity.com/packages/tools/animation/dotween-hotween-v2-27676
 Banana Man
 https://assetstore.unity.com/packages/3d/characters/humanoids/banana-man-196830
-Basic Motions FREE
+Basic Motions FREE(※ アニメーションイベント用に加工したためインポートするだけでは稼働しない。)
 https://assetstore.unity.com/packages/3d/animations/basic-motions-free-154271
 Demonic Sword
 https://assetstore.unity.com/packages/3d/props/weapons/demonic-sword-222519
 Melee Warrior Animations FREE (※ アニメーションイベント用に加工したためインポートするだけでは稼働しない。)
 https://assetstore.unity.com/packages/3d/animations/melee-warrior-animations-free-165785
+GUI Parts
+https://assetstore.unity.com/packages/2d/gui/icons/gui-parts-159068

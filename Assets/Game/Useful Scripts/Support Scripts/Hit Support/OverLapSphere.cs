@@ -14,7 +14,6 @@ namespace HitSupport
 
         private int _previousFrameCount = default;
         private Collider[] _cachedColliders = default;
-        public bool IsFlipX { get; set; } = false;
 
         public Collider[] GetColliders(Transform origin)
         {
@@ -22,10 +21,6 @@ namespace HitSupport
             {
                 _previousFrameCount = Time.frameCount;
                 var offset = _offset;
-                if (IsFlipX)
-                {
-                    offset.x *= -1;
-                }
                 var dir = origin.rotation * offset;
                 return _cachedColliders = Physics.OverlapSphere(origin.position + dir, _radius, _targetLayer);
             }
@@ -56,10 +51,6 @@ namespace HitSupport
             if (_isDrawGizmo)
             {
                 var offset = _offset;
-                if (IsFlipX)
-                {
-                    offset.x *= -1;
-                }
                 var dir = origin.rotation * offset;
 
                 if (IsHit(origin))

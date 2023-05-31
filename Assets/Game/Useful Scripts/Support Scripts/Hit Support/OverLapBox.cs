@@ -15,18 +15,12 @@ namespace HitSupport
         private int _previousFrameCount = default;
         private Collider[] _cachedColliders = default;
 
-        public bool IsFlipX { get; set; } = false;
-
         public Collider[] GetColliders(Transform origin)
         {
             if (_previousFrameCount != Time.frameCount)
             {
                 _previousFrameCount = Time.frameCount;
                 var offset = _offset;
-                if (IsFlipX)
-                {
-                    offset *= -1f;
-                }
                 var dir = origin.rotation * offset; // 回転を考慮した本当のオフセットを取得
                 return _cachedColliders = Physics.OverlapBox(origin.position + dir, _size / 2f, origin.rotation, _targetLayer);
             }
@@ -63,10 +57,6 @@ namespace HitSupport
                 }
 
                 var offset = _offset;
-                if (IsFlipX)
-                {
-                    offset *= -1f;
-                }
 
                 //Gizmo はワールド座標指定なので、相対座標指定の場合はマトリクス変換で移動する
                 Gizmos.matrix = Matrix4x4.TRS(origin.position, origin.rotation, Vector3.one);
