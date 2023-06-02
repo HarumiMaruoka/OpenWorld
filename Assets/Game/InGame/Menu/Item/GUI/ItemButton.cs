@@ -16,15 +16,22 @@ public class ItemButton : MonoBehaviour
     private Text _stockNumberText = default;
 
     private int _id = default;
+    private string _name = default;
+    private ItemIsUsedWindow _checkItemIsUsedWindow = default;
 
     public int MyItemID => _id;
 
     public async void Setup(int id)
     {
         _id = id;
-        _nameText.text = (await ItemManager.GetItemData(this.GetCancellationTokenOnDestroy()))[_id].Name;
-        (await ItemManager.GetItemData(this.GetCancellationTokenOnDestroy()))[_id].InventoryCount.Subscribe(AssignStockCount);
+        _name = (await ItemManager.GetItemData(_id, this.GetCancellationTokenOnDestroy())).Name;
+        _nameText.text = _name;
+        (await ItemManager.GetItemData(_id, this.GetCancellationTokenOnDestroy())).InventoryCount.Subscribe(AssignStockCount);
         GetComponent<Button>().onClick.AddListener(UseItem);
+    }
+    public void SetCheckItemIsUsedWindow(ItemIsUsedWindow checkItemIsUsedWindow)
+    {
+        _checkItemIsUsedWindow = checkItemIsUsedWindow;
     }
     public void SetIcon(Sprite iconImage)
     {
@@ -34,13 +41,19 @@ public class ItemButton : MonoBehaviour
     {
         _stockNumberText.text = $"✕{number}";
     }
-    public async void SetExplanatoryText(Text text)
-    {
-        text.text = (await ItemManager.GetItemData(this.GetCancellationTokenOnDestroy()))[_id].ExplanatoryText;
-    }
     private async void UseItem()
     {
-        (await ItemManager.GetItemData(this.GetCancellationTokenOnDestroy()))[_id].UseItem(PlayerInfo.CurrentPlayerInfo);
+        if (ItemManager.ShouldConfirmItemUsage)
+        {
+            // 確認ウィンドウを表示する
+            _checkItemIsUsedWindow.OpenWindow();
+            _checkItemIsUsedWindow.SetMessageText(_name);
+            // 決定を待つ
+            var result = await _checkItemIsUsedWindow.WaitDecision(this.GetCancellationTokenOnDestroy());
+            // 許可されなかった場合
+            if (!result) return;
+        }
+        (await ItemManager.GetItemData(_id, this.GetCancellationTokenOnDestroy())).UseItem(PlayerInfo.CurrentPlayerInfo);
     }
     private void SetNavigation(Selectable up, Selectable down, Selectable right, Selectable left)
     {

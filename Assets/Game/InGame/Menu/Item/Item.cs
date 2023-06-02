@@ -1,7 +1,7 @@
 // 日本語対応
-using UnityEngine;
-using UniRx;
 using System.Collections.Generic;
+using UniRx;
+using UnityEngine;
 
 /// <summary> アイテムの基底クラス </summary>
 public class Item

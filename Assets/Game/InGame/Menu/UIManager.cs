@@ -5,6 +5,24 @@ using UnityEngine.EventSystems;
 
 public class UIManager : MonoBehaviour
 {
+    private static UIManager _current = default;
+    public static UIManager Current => _current;
+
+    private void Awake()
+    {
+#if UNITY_EDITOR
+        if (_current != null)
+        {
+            Debug.LogError("UIManagerが複数個あるかもよ。あるいは開放し忘れてるかもよ。");
+        }
+#endif
+        _current = this;
+    }
+    private void OnDestroy()
+    {
+        _current = null;
+    }
+
     private GameObject _previousSelectedObject = null;
     /// <summary>
     /// EventSystemで選択中のオブジェクトが変更されたときに発行するイベント。

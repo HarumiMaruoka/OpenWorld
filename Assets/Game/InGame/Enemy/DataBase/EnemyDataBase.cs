@@ -1,5 +1,7 @@
 // 日本語対応
 using Cysharp.Threading.Tasks;
+using System;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -10,14 +12,34 @@ public static class EnemyDataBase
 
     private static EnemyStatus[] _enemyStatusData = null;
 
-    public static async void Setup()
+    private static bool _isSetuped = false;
+
+    private static bool IsSetuped()
     {
+        return _isSetuped;
+    }
+
+    public static async UniTask<EnemyStatus> GetEnemyStatus(int id, CancellationToken token)
+    {
+        if (_enemyStatusData == null) Setup();
+        try
+        {
+            await UniTask.WaitUntil(IsSetuped, cancellationToken: token);
+        }
+        catch (OperationCanceledException)
+        {
+            return default;
+        }
+        return _enemyStatusData[id];
+    }
+    private static async void Setup()
+    {
+        // エネミーステータスの配列を確保する。
+        _enemyStatusData = new EnemyStatus[_maxEnemyID];
         // アドレッサブルから読み込む準備をする。
         var asyncOperationHandle = Addressables.LoadAssetAsync<TextAsset>(_enemyStatusCsvAddressableName);
         // アドレッサブルから読み込む。
         await asyncOperationHandle.Task;
-        // エネミーステータスの配列を確保する。
-        _enemyStatusData = new EnemyStatus[_maxEnemyID];
         // 読み込み用テキストを改行区切りで分割する。
         var allData = asyncOperationHandle.Result.text.Split('\n');
         // インデックス カウンタ変数を用意する。0行目はヘッダー行なので無視する。
@@ -35,13 +57,7 @@ public static class EnemyDataBase
         }
         // アドレッサブルを開放する。
         Addressables.Release(asyncOperationHandle);
-
-    }
-    public static async UniTask<EnemyStatus> GetEnemyStatus(int id)
-    {
-        if (_enemyStatusData == null) Setup();
-        await UniTask.WaitUntil(() => _enemyStatusData != null);
-        return _enemyStatusData[id];
+        _isSetuped = true;
     }
 }
 public struct EnemyStatus

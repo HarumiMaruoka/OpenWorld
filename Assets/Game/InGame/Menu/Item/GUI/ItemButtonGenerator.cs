@@ -24,9 +24,14 @@ public class ItemButtonGenerator : MonoBehaviour
     [SerializeField]
     private Transform _valuablesParent = default;
 
+    [Header("以下 アイテムボタンに渡す値")]
+    [Header("アイテムを使用する際の確認ウィンドウ")]
+    [SerializeField]
+    private ItemIsUsedWindow _checkItemIsUsedWindow = default;
+
     private async void Awake()
     {
-        Generate(await ItemManager.GetItemData(this.gameObject.GetCancellationTokenOnDestroy()));
+        Generate(await ItemManager.GetItemDataAll(this.gameObject.GetCancellationTokenOnDestroy()));
     }
 
     private void Generate(Item[] items)
@@ -35,6 +40,7 @@ public class ItemButtonGenerator : MonoBehaviour
         {
             var button = Instantiate(_itemButtonPrefab, _allParent);
             button.Setup(i);
+            button.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
 
             ItemButton itemButton;
             switch (items[i].EffectType)
@@ -42,18 +48,22 @@ public class ItemButtonGenerator : MonoBehaviour
                 case ItemEffectType.Healing:
                     itemButton = Instantiate(_itemButtonPrefab, _healingParent);
                     itemButton.Setup(i);
+                    itemButton.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
                     break;
                 case ItemEffectType.Attack:
                     itemButton = Instantiate(_itemButtonPrefab, _attackParent);
                     itemButton.Setup(i);
+                    itemButton.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
                     break;
                 case ItemEffectType.Support:
                     itemButton = Instantiate(_itemButtonPrefab, _supportParent);
                     itemButton.Setup(i);
+                    itemButton.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
                     break;
                 case ItemEffectType.Valuables:
                     itemButton = Instantiate(_itemButtonPrefab, _valuablesParent);
                     itemButton.Setup(i);
+                    itemButton.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
                     break;
             }
         }

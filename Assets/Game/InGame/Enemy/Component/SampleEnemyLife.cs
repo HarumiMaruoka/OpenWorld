@@ -1,4 +1,5 @@
 // 日本語対応
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyInformation))]
@@ -15,7 +16,7 @@ public class SampleEnemyLife : MonoBehaviour, IDamageable
     private async void Start()
     {
         // 最大ライフを設定する
-        _currentLife = (await EnemyDataBase.GetEnemyStatus(_myInfo.MyID)).MaxLife;
+        _currentLife = (await EnemyDataBase.GetEnemyStatus(_myInfo.MyID, this.GetCancellationTokenOnDestroy())).MaxLife;
     }
     public void Damage(float value)
     {

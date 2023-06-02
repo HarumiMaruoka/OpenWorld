@@ -13,19 +13,32 @@ public static class ItemManager
 
     private static bool _isSetuped = false;
 
-    public async static UniTask<Item[]> GetItemData(CancellationToken token)
+    /// <summary> アイテムを使用する際、確認ウィンドウを表示するかどうか。 </summary>
+    public static bool ShouldConfirmItemUsage { get; set; } = true;
+
+    public async static UniTask<Item> GetItemData(int id, CancellationToken token)
     {
-        if (_itemData == null)
+        if (_itemData == null) Setup();
+        try
         {
-            Setup();
-            try
-            {
-                await UniTask.WaitUntil(IsSetuped, cancellationToken: token);
-            }
-            catch (OperationCanceledException)
-            {
-                return default;
-            }
+            await UniTask.WaitUntil(IsSetuped, cancellationToken: token);
+        }
+        catch (OperationCanceledException)
+        {
+            return default;
+        }
+        return _itemData[id];
+    }
+    public async static UniTask<Item[]> GetItemDataAll(CancellationToken token)
+    {
+        if (_itemData == null) Setup();
+        try
+        {
+            await UniTask.WaitUntil(IsSetuped, cancellationToken: token);
+        }
+        catch (OperationCanceledException)
+        {
+            return default;
         }
         return _itemData;
     }
@@ -36,13 +49,13 @@ public static class ItemManager
 
     private async static void Setup()
     {
+        // アイテムの配列を確保する。
+        _itemData = new Item[MaxItemID];
         // ここでcsvファイルから情報を読み込み、Itemインスタンスを確保する。
         // アドレッサブルから読み込む準備をする。
         var asyncOperationHandle = Addressables.LoadAssetAsync<TextAsset>(_itemDataCsvAddressableName);
         // アドレッサブルから読み込む。
         await asyncOperationHandle.Task;
-        // エネミーステータスの配列を確保する。
-        _itemData = new Item[MaxItemID];
         // 読み込み用テキストを改行区切りで分割する。
         var allData = asyncOperationHandle.Result.text.Split('\n');
         // インデックス カウンタ変数を用意する。0行目はヘッダー行なので無視する。
