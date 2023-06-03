@@ -6,7 +6,7 @@ using System.Threading;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class EnemyState_WaypointWalk : MonoBehaviour
+public class Actor_WaypointWalk : MonoBehaviour
 {
     private CharacterController _characterController = null;
     private bool _isMoving = false;
@@ -14,10 +14,6 @@ public class EnemyState_WaypointWalk : MonoBehaviour
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
-    }
-    private void Update()
-    {
-
     }
 
     public async void Move(Vector3 position, float releaseSquareDistance = 0.01f, CancellationToken token = default, Action onComplete = default)
