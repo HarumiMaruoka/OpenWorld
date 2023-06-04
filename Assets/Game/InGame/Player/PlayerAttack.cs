@@ -49,7 +49,7 @@ public class PlayerAttack : MonoBehaviour
         {
             if (colls[i].TryGetComponent(out IDamageable damageable))
             {
-                damageable.Damage(_info.AttackPower);
+                damageable.Damage(new AttackSet(default, _info.AttackPower, default, default));
             }
         }
     }

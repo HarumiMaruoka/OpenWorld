@@ -10,3 +10,11 @@ Melee Warrior Animations FREE (※ アニメーションイベント用に加工したためインポー
 https://assetstore.unity.com/packages/3d/animations/melee-warrior-animations-free-165785
 GUI Parts
 https://assetstore.unity.com/packages/2d/gui/icons/gui-parts-159068
+Cool Visual Effects - Part 1 - URP Support
+https://assetstore.unity.com/packages/vfx/particles/cool-visual-effects-part-1-urp-support-176571
+Procedural Lightning - High Performance and Shocking Lightning
+https://assetstore.unity.com/packages/tools/particles-effects/procedural-lightning-high-performance-and-shocking-lightning-34217
+Particle Pack
+https://assetstore.unity.com/packages/vfx/particles/particle-pack-127325
+Legacy Particle Pack
+https://assetstore.unity.com/packages/vfx/particles/legacy-particle-pack-73777

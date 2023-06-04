@@ -9,18 +9,28 @@ public class SampleEnemyLife : MonoBehaviour, IDamageable
     [SerializeField]
     private float _currentLife = float.MaxValue;
 
+    public Transform Transform => transform;
+
     private void Awake()
     {
         _myInfo = GetComponent<EnemyInformation>();
+    }
+    private void OnEnable()
+    {
+        DamageableManager.Register(this);
+    }
+    private void OnDisable()
+    {
+        DamageableManager.Lift(this);
     }
     private async void Start()
     {
         // 最大ライフを設定する
         _currentLife = (await EnemyDataBase.GetEnemyStatus(_myInfo.MyID, this.GetCancellationTokenOnDestroy())).MaxLife;
     }
-    public void Damage(float value)
+    public void Damage(AttackSet value)
     {
-        _currentLife -= value;
+        _currentLife -= value.AttackValue;
 
         // 死亡時の処理
         if (_currentLife <= 0f)

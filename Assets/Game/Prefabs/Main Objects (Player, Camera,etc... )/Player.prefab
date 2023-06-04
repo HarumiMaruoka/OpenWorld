@@ -49,7 +49,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1914754230
 Transform:
   m_ObjectHideFlags: 0
@@ -1099,6 +1099,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5409596974409458007}
   - component: {fileID: 2157948928266992429}
+  - component: {fileID: 6950944977246428537}
   - component: {fileID: 7449617972791644205}
   - component: {fileID: 830413756}
   - component: {fileID: 830413755}
@@ -1106,6 +1107,7 @@ GameObject:
   - component: {fileID: 7924160921562413428}
   - component: {fileID: 5718647035177033064}
   - component: {fileID: 5659688711845858816}
+  - component: {fileID: 1812229688}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -1152,6 +1154,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &6950944977246428537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4636859774947064813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29968b7f7fdb4634cba0449b38e3d269, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxLife: 10
+  _currentLife:
+    value: 0
 --- !u!114 &7449617972791644205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1207,7 +1224,7 @@ MonoBehaviour:
     _maxDistance: 1.1
     _layerMask:
       serializedVersion: 2
-      m_Bits: 119
+      m_Bits: 320
     _isDrawGizmos: 1
     _hitColor: {r: 1, g: 0, b: 0, a: 0.5882353}
     _noHitColor: {r: 0, g: 0, b: 1, a: 0.5882353}
@@ -1287,6 +1304,24 @@ MonoBehaviour:
     _hitColor: {r: 1, g: 0, b: 0, a: 1}
     _noHitColor: {r: 0, g: 0, b: 1, a: 1}
   _talkInterval: 0.4
+--- !u!114 &1812229688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4636859774947064813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a050ce09b02a7f46915b631c247747a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxAreaSize: 40
+  _expandTime: 2
+  _eraseTime: 5
+  _terrainMat: {fileID: 2100000, guid: fbddfdb556c624e4a8a20468565c25cf, type: 2}
+  _attachMat: {fileID: 2100000, guid: 0b443a92dc06a7a4994a0c0c7380cdc9, type: 2}
+  _instancedMat: {fileID: 0}
 --- !u!1 &4664073259408450796
 GameObject:
   m_ObjectHideFlags: 0

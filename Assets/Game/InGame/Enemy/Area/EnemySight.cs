@@ -1,5 +1,6 @@
 // 日本語対応
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class EnemySight : MonoBehaviour
@@ -11,52 +12,26 @@ public class EnemySight : MonoBehaviour
     [SerializeField]
     private float _maxDistance = 10f;
 
-
-    private HashSet<Transform> _targets = new HashSet<Transform>();
-
     public float SightAngle { get => _sightAngle; }
     public float MaxDistance { get => _maxDistance; }
 
-    public void AddTarget(Transform target)
-    {
-        _targets.Add(target);
-    }
-    public void RemoveTarget(Transform target)
-    {
-        _targets.Remove(target);
-    }
-    public Transform SetNearTarget()
-    {
-        Transform result = null;
-        float squaredDistance = float.MaxValue;
-        foreach (var e in _targets)
-        {
-            if (result == null)
-            {
-                result = e;
-                continue;
-            }
-            var tempSD = Mathf.Abs(result.position.sqrMagnitude - e.position.sqrMagnitude);
-            if (squaredDistance > tempSD)
-            {
-                squaredDistance = tempSD;
-                result = e;
-                continue;
-            }
-        }
-        return result;
-    }
+    private BoolReactiveProperty _isFind = new BoolReactiveProperty(false);
+    public IReadOnlyReactiveProperty<bool> IsFind => _isFind;
 
+    private void Update()
+    {
+        PlayerIsVisible();
+    }
     /// <summary>
     /// ターゲットが見えているかどうか
     /// </summary>
-    public bool IsVisible(Transform target)
+    public bool PlayerIsVisible()
     {
-        if (_targets.Count == 0) return false;
         // 自身の向き（正規化されたベクトル）
         var selfDir = _eye.forward;
         // ターゲットまでの向きと距離計算
-        var targetDir = target.position - _eye.position;
+        if (PlayerInfo.CurrentPlayerInfo == null) return false;
+        var targetDir = PlayerInfo.CurrentPlayerInfo.transform.position - _eye.position;
         var targetDistance = targetDir.magnitude;
         // cos(θ/2)を計算
         var cosHalf = Mathf.Cos(_sightAngle / 2 * Mathf.Deg2Rad);
@@ -64,7 +39,7 @@ public class EnemySight : MonoBehaviour
         // ターゲットへの向きベクトルを正規化する必要があることに注意
         var innerProduct = Vector3.Dot(selfDir, targetDir.normalized);
         // 視界判定
-        return innerProduct > cosHalf && targetDistance < _maxDistance;
+        return _isFind.Value = innerProduct > cosHalf && targetDistance < _maxDistance;
     }
 #if UNITY_EDITOR
     [SerializeField]
@@ -84,15 +59,9 @@ public class EnemySight : MonoBehaviour
         var coneApex = selfPos;
         // 円錐の底面円の半径
         var coneRadius = _maxDistance * Mathf.Tan(_sightAngle * 0.5f * Mathf.Deg2Rad);
-        bool isFind = false;
-        foreach (var e in _targets)
-        {
-            if (IsVisible(e))
-            {
-                isFind = true;
-                break;
-            }
-        }
+        // プレイヤーが視界にいるかどうか
+        bool isFind = PlayerIsVisible();
+
         // 円錐の底面円を描画
         DrawGizmosCone(coneApex, selfDir, coneRadius, isFind ? _hitConeColor : _noHitConeColor);
     }

@@ -1,53 +1,51 @@
 // 日本語対応
 using UnityEngine;
+using UniRx;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 public class SampleEnemyController : MonoBehaviour
 {
-    [SerializeField]
-    private float _idleTime = 3f;
-    [SerializeField]
-    private float _moveTime = 3f;
-    [SerializeField]
-    private float _attackTime = 3f;
-
     private EnemyStateMachine _enemyStateMachine = default;
+    private EnemySight _enemySight = default;
+    private SampleEnemyTracking _sampleEnemyTracking = default;
     private float _timer = 0f;
+    private CancellationTokenSource _trackingTokenSource = null;
 
     private void Start()
     {
-        _enemyStateMachine = GetComponent<EnemyStateMachine>();
+        //_enemyStateMachine = GetComponent<EnemyStateMachine>();
+        //_enemySight = GetComponent<EnemySight>();
+        //_sampleEnemyTracking = GetComponent<SampleEnemyTracking>();
+        //_enemySight.IsFind.Subscribe(OnSightStateChanged);
     }
 
-    private void Update()
+    private void OnSightStateChanged(bool found)
     {
-        // Idle→Move→Attack→Idle を繰り返す
-        _timer += Time.deltaTime;
-        if (_enemyStateMachine.CurrentState.GetType() == typeof(SampleEnemy_State_Idle))
+        if (found)
         {
-            if (_timer > _idleTime)
-            {
-                _timer -= _idleTime;
-                _enemyStateMachine.AddCondition(EnemyConditionList.Move);
-                _enemyStateMachine.RemoveCondition(EnemyConditionList.Idle);
-            }
+            _trackingTokenSource = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
+            _sampleEnemyTracking.Tracking(PlayerInfo.CurrentPlayerInfo.transform, _trackingTokenSource.Token);
         }
-        else if (_enemyStateMachine.CurrentState.GetType() == typeof(SampleEnemy_State_Move))
+        else
         {
-            if (_timer > _moveTime)
-            {
-                _timer -= _moveTime;
-                _enemyStateMachine.AddCondition(EnemyConditionList.Attack);
-                _enemyStateMachine.RemoveCondition(EnemyConditionList.Move);
-            }
+            StopTracking();
         }
-        else if (_enemyStateMachine.CurrentState.GetType() == typeof(SampleEnemy_State_Attack))
+    }
+
+    private void StopTracking()
+    {
+        if (_trackingTokenSource != null)
         {
-            if (_timer > _attackTime)
-            {
-                _timer -= _attackTime;
-                _enemyStateMachine.AddCondition(EnemyConditionList.Idle);
-                _enemyStateMachine.RemoveCondition(EnemyConditionList.Attack);
-            }
+            _sampleEnemyTracking.LostSightOf();
+            _trackingTokenSource.Cancel();
+            _trackingTokenSource.Dispose();
+            _trackingTokenSource = null;
         }
+    }
+
+    private void OnDestroy()
+    {
+        StopTracking();
     }
 }
