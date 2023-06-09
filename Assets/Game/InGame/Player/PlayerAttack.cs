@@ -11,13 +11,14 @@ public class PlayerAttack : MonoBehaviour
 
     private PlayerInfo _info = null;
     private BoolReactiveProperty _isAttacking = new BoolReactiveProperty(false);
+    private PlayerMove _playerMove = null;
 
     public IReadOnlyReactiveProperty<bool> IsAttacking => _isAttacking;
 
     private void Awake()
     {
         _info = GetComponent<PlayerInfo>();
-
+        _playerMove = GetComponent<PlayerMove>();
     }
     private void Start()
     {
@@ -33,6 +34,7 @@ public class PlayerAttack : MonoBehaviour
     private void Fire(InputAction.CallbackContext callbackContext)
     {
         if (!_info.IsGrounded.Value) return; // 空中では攻撃しない
+        _playerMove.Stop();
 
         _isAttacking.Value = true;
         _info.AddState(PlayerState.Attack);

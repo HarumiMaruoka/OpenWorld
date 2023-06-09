@@ -55,11 +55,11 @@ public abstract class State<T> : ScriptableObject where T : Enum
             if (_owner.Conditions.HasFlag(_transitions[i].Conditions))
             {
                 // 旧ステートのExit処理を実行
-                _owner.CurrentState.Exit();
+                _owner.CurrentState.Value.Exit();
                 // ステートを更新
                 _owner.ChangeState(_transitions[i].NextState);
                 // 新ステートのEnter処理を実行
-                _owner.CurrentState.Enter();
+                _owner.CurrentState.Value.Enter();
                 return;
             }
         }

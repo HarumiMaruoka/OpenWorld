@@ -3,6 +3,7 @@ using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 
 /// <summary>
 /// Sample enemy の攻撃状態を表現する。
@@ -27,37 +28,29 @@ public class SampleEnemyAttack : MonoBehaviour
     private Color _nomalColor = Color.white;
 
     [SerializeField]
-    private ParticleSystem[] _explosionEffect = default;
+    private GameObject _explosionEffectPrefab = default;
 
     private MeshRenderer _meshRenderer = null;
 
-    public event Action OnFireEnd = default;
+    public event Action OnAttackCompleted = default;
 
     private void Awake()
     {
         _meshRenderer = GetComponent<MeshRenderer>();
-        foreach (var e in _explosionEffect)
-        {
-            e.Stop();
-        }
-        Fire();
     }
-    public async void Fire()
+    public async void Fire(CancellationToken token)
     {
-        await _meshRenderer.material.DOColor(_explosionColor, _explosionDelay);
-        foreach (var e in _explosionEffect)
-        {
-            e.Play();
-        }
+        await _meshRenderer.material.DOColor(_explosionColor, _explosionDelay).ToUniTask(cancellationToken: token);
+        Instantiate(_explosionEffectPrefab, transform.position, Quaternion.identity);
         // ここに攻撃処理を記述する
         if (PlayerLife.Current != null &&
             Vector3.SqrMagnitude(PlayerLife.Current.Transform.position - transform.position) < _attackRadius)
         {
             PlayerLife.Current.Damage(new AttackSet(default, _attackPower, default, default));
         }
-        await _meshRenderer.material.DOColor(_nomalColor, _recoveryDelay);
-        Fire();
-        OnFireEnd?.Invoke();
+        await _meshRenderer.material.DOColor(_nomalColor, _recoveryDelay).ToUniTask(cancellationToken: token);
+
+        OnAttackCompleted?.Invoke();
     }
 
 #if UNITY_EDITOR

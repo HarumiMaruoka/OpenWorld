@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public abstract class StateMachine<T> : MonoBehaviour where T : Enum
 {
     [Tooltip("最初のステート"), SerializeField]
     private State<T> _initilizeState = default;
     /// <summary> 現在のステートを表現する値 </summary>
-    public State<T> CurrentState { get; private set; } = null;
+    public ReactiveProperty<State<T>> CurrentState { get; private set; } = new ReactiveProperty<State<T>>(null);
     /// <summary> この値を変更する事で状態を遷移する。 </summary>
     public T Conditions { get; protected set; } = default;
     /// <summary> ステートを格納しておくコンテナ </summary>
@@ -15,7 +16,7 @@ public abstract class StateMachine<T> : MonoBehaviour where T : Enum
     /// <summary> ステートを格納しておくコンテナ </summary>
     public IReadOnlyDictionary<Type, State<T>> States => _states;
 
-    private void Start()
+    protected virtual void Start()
     {
         // 最初のステートを割り当てる
         var state = ChangeState(_initilizeState);
@@ -24,10 +25,12 @@ public abstract class StateMachine<T> : MonoBehaviour where T : Enum
 
     public State<T> ChangeState(State<T> nextState)
     {
+        //
+        // Debug.Log($"ステートが変わったよ {nextState.name}");
         // ディクショナリに登録されている時は登録されているオブジェクトをそのまま利用する
         if (_states.TryGetValue(nextState.GetType(), out State<T> value))
         {
-            return CurrentState = value;
+            return CurrentState.Value = value;
         }
         // 登録されていない場合
         else
@@ -40,12 +43,12 @@ public abstract class StateMachine<T> : MonoBehaviour where T : Enum
             // ディクショナリに登録する
             _states.Add(clone.GetType(), clone);
             // 現在ステートを更新する
-            return CurrentState = clone;
+            return CurrentState.Value = clone;
         }
     }
     private void Update()
     {
-        CurrentState.Execute();
+        CurrentState.Value.Execute();
     }
     public abstract void ClearCondition();
     public abstract void AddCondition(T condition);

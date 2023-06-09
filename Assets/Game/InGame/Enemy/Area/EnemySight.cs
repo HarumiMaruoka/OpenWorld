@@ -18,10 +18,6 @@ public class EnemySight : MonoBehaviour
     private BoolReactiveProperty _isFind = new BoolReactiveProperty(false);
     public IReadOnlyReactiveProperty<bool> IsFind => _isFind;
 
-    private void Update()
-    {
-        PlayerIsVisible();
-    }
     /// <summary>
     /// ターゲットが見えているかどうか
     /// </summary>

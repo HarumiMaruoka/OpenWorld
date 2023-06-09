@@ -41,6 +41,17 @@ public class PlayerInfo : MonoBehaviour, IItemUser
         _inputs.Enable();
         _currentPlayerInfo = this;
     }
+    private void Update()
+    {
+        if (_grounded.IsHit(transform))
+        {
+            RemoveState(PlayerState.Midair);
+        }
+        else
+        {
+            AddState(PlayerState.Midair);
+        }
+    }
     private void OnDestroy()
     {
         _currentPlayerInfo = null;
@@ -97,5 +108,6 @@ public enum PlayerState : int
     Attack = 2,
     Midair = 4,
     Land = 8,
-    Talk = 16
+    Talk = 16,
+    Avoidance = 32
 }

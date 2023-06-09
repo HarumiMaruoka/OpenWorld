@@ -22,6 +22,8 @@ public enum EnemyConditionList
     None = 0,
     Everything = -1,
     Idle = 1,
-    Move = 2,
+    RandomWalk = 2,
     Attack = 4,
+    Tracking = 32,
+    Search = 64,
 }

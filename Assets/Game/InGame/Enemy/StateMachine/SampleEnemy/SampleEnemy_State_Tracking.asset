@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65792e86ac8a0864f8a5946bcbbf145f, type: 3}
-  m_Name: SampleEnemy_State_Move
+  m_Name: SampleEnemy_State_Tracking
   m_EditorClassIdentifier: 
   _transitions:
+  - _conditions: 64
+    _nextState: {fileID: 11400000, guid: 9263070d65a42c84fa15f452af51a065, type: 2}
   - _conditions: 4
     _nextState: {fileID: 11400000, guid: b3d94ecbf351ec2489bdbcfaa792a355, type: 2}

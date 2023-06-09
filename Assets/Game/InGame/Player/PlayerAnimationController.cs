@@ -12,11 +12,14 @@ public class PlayerAnimationController : MonoBehaviour
     private string _attackParam = default;
     [AnimationParameter, SerializeField]
     private string _midairParam = default;
+    [AnimationParameter, SerializeField]
+    private string _avoidanceParam = default;
 
     private Animator _animator = null;
     private PlayerInfo _info = null;
     private PlayerMove _move = null;
     private PlayerAttack _attack = null;
+    private PlayerAvoidance _avoidance = null;
 
     private void Awake()
     {
@@ -24,6 +27,7 @@ public class PlayerAnimationController : MonoBehaviour
         _info = GetComponent<PlayerInfo>();
         _move = GetComponent<PlayerMove>();
         _attack = GetComponent<PlayerAttack>();
+        _avoidance = GetComponent<PlayerAvoidance>();
 
         _move.CurrentHorizontalSpeed.Subscribe(value =>
             _animator.SetFloat(_moveSpeedParam, value / _move.MaxHorizontalSpeed));
@@ -33,11 +37,12 @@ public class PlayerAnimationController : MonoBehaviour
 
         _info.IsGrounded.Subscribe(value =>
             _animator.SetBool(_midairParam, !value));
+
+        _avoidance.IsAvoiding.Subscribe(value =>
+            _animator.SetBool(_avoidanceParam, value));
     }
 
-    /// <summary>
-    /// アニメーションをUnityEventで制御する用のメソッド
-    /// </summary>
+    // === 下記は アニメーションをインスペクタ(UnityEvent)を利用して 制御する用のメソッド === //
     public void SetAnimationParam(string animParamName)
     {
         _animator.SetBool(animParamName, true);

@@ -21,7 +21,7 @@ public class Item
     private readonly ItemEffectType _effectType = default;
     /// <summary> このアイテムの効果対象のリスト </summary>
     private readonly List<IItemEffectReceiver> _itemEffectReceivers = new List<IItemEffectReceiver>();
-    /// <summary> このアイテムの効果対象を取捨選択する用のクラス </summary>
+    /// <summary> このアイテムの効果対象を取捨選択する用のスクリプタブルオブジェクト </summary>
     private readonly ItemEffectFilterBase _itemEffectFilter = default;
     /// <summary> アイテムの所持数を保存する用のキー </summary>
     private const string PlayerPrefsInventoryCountKey = "InventoryCount";

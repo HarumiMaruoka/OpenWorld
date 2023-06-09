@@ -102,7 +102,6 @@ public static class ItemManager
     /// <returns></returns>
     private static async UniTask<ItemEffectFilterBase> GetItemEffectFilter(string addressableName)
     {
-        await UniTask.Yield(); // コンパイルエラー回避の為の仮置き。
-        return null; // コンパイルエラー回避の為の仮置き。
+        return default; // コンパイルエラー回避の為の仮置き。
     }
 }

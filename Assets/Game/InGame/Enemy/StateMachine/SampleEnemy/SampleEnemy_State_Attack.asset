@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SampleEnemy_State_Attack
   m_EditorClassIdentifier: 
   _transitions:
-  - _conditions: 1
-    _nextState: {fileID: 11400000, guid: 1c191a61fc086b5448fdbc43f37e8967, type: 2}
+  - _conditions: 64
+    _nextState: {fileID: 11400000, guid: 9263070d65a42c84fa15f452af51a065, type: 2}

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 29d9fcd31eac2e543a28b519dea79878, type: 3}
-  m_Name: SampleEnemy_State_Idle
+  m_Name: SampleEnemy_State_RandomWalk
   m_EditorClassIdentifier: 
   _transitions:
-  - _conditions: 2
+  - _conditions: 32
     _nextState: {fileID: 11400000, guid: c3a09731ff0bd894a8c9e38c4427dbe4, type: 2}

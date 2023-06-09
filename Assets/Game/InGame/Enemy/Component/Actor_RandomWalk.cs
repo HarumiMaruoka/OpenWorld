@@ -5,7 +5,7 @@ public class Actor_RandomWalk : MonoBehaviour
 {
     [Header("移動速度")]
     [SerializeField]
-    private float _moveSpeed = 3f;
+    private float _baseMoveSpeed = 3f;
     [Header("回転速度")]
     [SerializeField]
     private float _rotationSpeed = 400f;
@@ -25,6 +25,12 @@ public class Actor_RandomWalk : MonoBehaviour
     [SerializeField]
     private LayerMask _obstacleLayer;
 
+    [Header("移動速度のパーリンノイズ設定")]
+    [SerializeField]
+    private float _noiseScale = 1f;
+    [SerializeField]
+    private float _noiseSpeed = 1f;
+
     private CharacterController _characterController;
     private float _currentDirection;
     private float _changeDirectionTimer;
@@ -38,8 +44,9 @@ public class Actor_RandomWalk : MonoBehaviour
 
     private void Update()
     {
-        //Move();
+        Move();
     }
+
     private void Move()
     {
         // 方向転換のタイマーを更新
@@ -50,6 +57,10 @@ public class Actor_RandomWalk : MonoBehaviour
             RandomizeDirection();
             _changeDirectionTimer = _changeDirectionInterval;
         }
+
+        // 移動速度にパーリンノイズを適用
+        float noise = Mathf.PerlinNoise(Time.time * _noiseSpeed, 0f);
+        float moveSpeed = _baseMoveSpeed + noise * _noiseScale;
 
         // 移動処理
         Vector3 moveDirection = Quaternion.Euler(0f, _currentDirection, 0f) * Vector3.forward;
@@ -72,7 +83,7 @@ public class Actor_RandomWalk : MonoBehaviour
             RandomizeDirection();
         }
 
-        _characterController.SimpleMove(moveDirection * _moveSpeed);
+        _characterController.SimpleMove(moveDirection * moveSpeed);
 
         // プレイヤーの向きを移動方向に合わせる
         if (moveDirection != Vector3.zero)
