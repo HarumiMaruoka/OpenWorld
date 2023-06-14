@@ -10,51 +10,25 @@ using UnityEngine;
 /// </summary>
 public class SaveLoadManager
 {
-    private event Action OnInGameDataSave = default;
-    private event Action OnInGameDataLoad = default;
+    public static event Action OnInGameDataSave = default;
+    public static event Action OnInGameDataLoad = default;
 
-    private event Action OnOutGameDataSave = default;
-    private event Action OnOutGameDataLoad = default;
+    public static event Action OnOutGameDataSave = default;
+    public static event Action OnOutGameDataLoad = default;
 
-    public void Register(ISavable savable)
-    {
-        if (savable.SaveType == SaveType.InGame)
-        {
-            OnInGameDataSave += savable.Save;
-            OnInGameDataLoad += savable.Load;
-        }
-        else if (savable.SaveType == SaveType.OutGame)
-        {
-            OnOutGameDataSave += savable.Save;
-            OnOutGameDataLoad += savable.Load;
-        }
-    }
-    public void Lift(ISavable savable)
-    {
-        if (savable.SaveType == SaveType.InGame)
-        {
-            OnInGameDataSave -= savable.Save;
-            OnInGameDataLoad -= savable.Load;
-        }
-        else if (savable.SaveType == SaveType.OutGame)
-        {
-            OnOutGameDataSave -= savable.Save;
-            OnOutGameDataLoad -= savable.Load;
-        }
-    }
-    public void ExecuteInGameDataSave()
+    public static void ExecuteInGameDataSave()
     {
         OnInGameDataSave?.Invoke();
     }
-    public void ExecuteInGameDataLoad()
+    public static void ExecuteInGameDataLoad()
     {
         OnInGameDataLoad?.Invoke();
     }
-    public void ExecuteOutGameDataSave()
+    public static void ExecuteOutGameDataSave()
     {
         OnOutGameDataSave?.Invoke();
     }
-    public void ExecuteOutGameDataLoad()
+    public static void ExecuteOutGameDataLoad()
     {
         OnOutGameDataLoad?.Invoke();
     }

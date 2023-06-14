@@ -11,7 +11,9 @@ public class Actor_RandomWalk : MonoBehaviour
     private float _rotationSpeed = 400f;
     [Header("方向転換時間")]
     [SerializeField]
-    private float _changeDirectionInterval = 3f;
+    private float _maxChangeDirectionInterval = 0.6f;
+    [SerializeField]
+    private float _minChangeDirectionInterval = 3f;
     [Header("壁検知用Rayの長さ")]
     [SerializeField]
     private float _raycastFrontDistance = 1f;
@@ -38,7 +40,6 @@ public class Actor_RandomWalk : MonoBehaviour
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
-        _changeDirectionTimer = _changeDirectionInterval;
         RandomizeDirection();
     }
 
@@ -55,7 +56,7 @@ public class Actor_RandomWalk : MonoBehaviour
         {
             // 方向転換を行う
             RandomizeDirection();
-            _changeDirectionTimer = _changeDirectionInterval;
+            _changeDirectionTimer = _maxChangeDirectionInterval;
         }
 
         // 移動速度にパーリンノイズを適用
@@ -96,6 +97,7 @@ public class Actor_RandomWalk : MonoBehaviour
     private void RandomizeDirection()
     {
         // ランダムな角度を生成して現在の方向とする
+        _changeDirectionTimer = Random.Range(_minChangeDirectionInterval, _maxChangeDirectionInterval);
         float randomAngle = Random.Range(0f, 360f);
         _currentDirection = randomAngle;
     }

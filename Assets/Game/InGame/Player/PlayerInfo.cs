@@ -18,6 +18,8 @@ public class PlayerInfo : MonoBehaviour, IItemUser
     private float _moveDeceleration = 12f;
     [SerializeField]
     private float _jumpPower = 8f;
+    [SerializeField]
+    private float _attackPower = 5f;
 
     private ReactiveProperty<PlayerState> _currentState = new ReactiveProperty<PlayerState>(0);
     private InGameInput _inputs = null;
@@ -96,7 +98,7 @@ public class PlayerInfo : MonoBehaviour, IItemUser
     {
         get
         {
-            return 10f;
+            return _attackPower;
         }
     }
 }
@@ -109,5 +111,6 @@ public enum PlayerState : int
     Midair = 4,
     Land = 8,
     Talk = 16,
-    Avoidance = 32
+    Avoidance = 32,
+    Jump = 64,
 }

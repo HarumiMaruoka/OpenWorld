@@ -10,6 +10,7 @@ public class SampleEnemyLife : MonoBehaviour, IDamageable
     private float _currentLife = float.MaxValue;
 
     public Transform Transform => transform;
+    public float CurrentLife => _currentLife;
 
     private void Awake()
     {

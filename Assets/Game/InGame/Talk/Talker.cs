@@ -27,7 +27,7 @@ public class Talker : MonoBehaviour, ITalker
         TalkManager.Lift(this);
     }
 
-    public async void PlayTalk(Action onComplete = null)
+    public async UniTask PlayTalk(Action onComplete = null)
     {
         if (_isPlaying) return;
         _isPlaying = true;

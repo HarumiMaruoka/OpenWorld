@@ -26,7 +26,7 @@ public class SampleEnemyTracking : MonoBehaviour
     {
         var moveDirection = (PlayerInfo.CurrentPlayerInfo.transform.position - transform.position);
         moveDirection = new Vector3(moveDirection.x, 0f, moveDirection.z).normalized;
-        _characterController.SimpleMove(moveDirection * _moveSpeed * Time.deltaTime);
+        _characterController.SimpleMove(moveDirection * _moveSpeed);
 
         Quaternion toRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, _rotationSpeed * Time.deltaTime);

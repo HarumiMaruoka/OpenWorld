@@ -1,5 +1,6 @@
 // 日本語対応
 
+using Cysharp.Threading.Tasks;
 using System;
 /// <summary>
 /// 話相手を表現する
@@ -7,5 +8,5 @@ using System;
 public interface ITalker
 {
     public string Name { get; }
-    public void PlayTalk(Action onComplete = null);
+    public UniTask PlayTalk(Action onComplete = null);
 }

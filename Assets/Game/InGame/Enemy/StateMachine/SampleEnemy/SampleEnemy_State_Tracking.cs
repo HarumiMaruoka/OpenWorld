@@ -7,7 +7,7 @@ using UnityEngine;
 public class SampleEnemy_State_Tracking : EnemyStateBase
 {
     [SerializeField]
-    private float _attackRange = 3f;
+    private float _attackRange = 5f;
 
     private SampleEnemyController _sampleEnemyController = null;
     private SampleEnemyTracking _tracking = null;

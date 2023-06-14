@@ -181,7 +181,7 @@ Material:
     - _AlphaSrcBlend: 1
     - _AlphaToMask: 0
     - _AlphaToMaskInspectorValue: 0
-    - _AreaSize: 40
+    - _AreaSize: 0
     - _BUILTIN_AlphaClip: 1
     - _BUILTIN_Blend: 0
     - _BUILTIN_CullMode: 2
@@ -288,7 +288,7 @@ Material:
     - _EdgeColor: {r: 1, g: 0.98490566, b: 0.98490566, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _LineColor: {r: 0, g: 0.25288486, b: 1, a: 1}
-    - _PlayerPos: {r: -1.1156847, g: 0.5315529, b: 3.2489662, a: 0}
+    - _PlayerPos: {r: -5.86, g: 8.790923, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Subsurface_Scattering_Color: {r: 1, g: 1, b: 1, a: 0}
     - _Thickness_Remap: {r: 0, g: 1, b: 0, a: 0}

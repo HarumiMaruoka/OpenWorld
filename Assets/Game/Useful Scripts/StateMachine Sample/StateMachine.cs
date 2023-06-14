@@ -54,15 +54,3 @@ public abstract class StateMachine<T> : MonoBehaviour where T : Enum
     public abstract void AddCondition(T condition);
     public abstract void RemoveCondition(T condition);
 }
-/// <summary>
-/// ‘JˆÚ‚ÌğŒ‚ğ•\Œ»‚·‚é—ñ‹“‘Ì
-/// </summary>
-//[Flags, Serializable]
-//public enum Conditions
-//{
-//    None = 0,
-//    Everything = -1,
-//    Idle = 1,
-//    Move = 2,
-//    Jump = 4,
-//}

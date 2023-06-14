@@ -17,3 +17,5 @@ MonoBehaviour:
     _nextState: {fileID: 11400000, guid: 9263070d65a42c84fa15f452af51a065, type: 2}
   - _conditions: 4
     _nextState: {fileID: 11400000, guid: b3d94ecbf351ec2489bdbcfaa792a355, type: 2}
+  _attackRange: 6
+  _reactionTime: 1

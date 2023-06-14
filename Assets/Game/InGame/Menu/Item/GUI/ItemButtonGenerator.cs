@@ -1,9 +1,13 @@
 // 日本語対応
 using Cysharp.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemButtonGenerator : MonoBehaviour
 {
+    [SerializeField]
+    private ItemButtonController _itemButtonController = default;
     [Header("生成するアイテムボタンのプレハブ")]
     [SerializeField]
     private ItemButton _itemButtonPrefab = default;
@@ -27,45 +31,58 @@ public class ItemButtonGenerator : MonoBehaviour
     [Header("以下 アイテムボタンに渡す値")]
     [Header("アイテムを使用する際の確認ウィンドウ")]
     [SerializeField]
-    private ItemIsUsedWindow _checkItemIsUsedWindow = default;
+    private ItemIsUsedWindow _isUsedWindow = default;
 
-    private async void Awake()
-    {
-        Generate(await ItemManager.GetItemDataAll(this.gameObject.GetCancellationTokenOnDestroy()));
-    }
+    private List<ItemButton> _allButtons = new List<ItemButton>();
+    private List<ItemButton> _healingButtons = new List<ItemButton>();
+    private List<ItemButton> _attackButtons = new List<ItemButton>();
+    private List<ItemButton> _supportButtons = new List<ItemButton>();
+    private List<ItemButton> _valuablesButtons = new List<ItemButton>();
 
-    private void Generate(Item[] items)
+    public List<ItemButton> AllButtons => _allButtons;
+    public List<ItemButton> HealingButtons => _healingButtons;
+    public List<ItemButton> AttackButtons => _attackButtons;
+    public List<ItemButton> SupportButtons => _supportButtons;
+    public List<ItemButton> ValuablesButtons => _valuablesButtons;
+
+    public void Generate(Item[] items, Action onComplete = null)
     {
         for (int i = 0; i < items.Length; i++)
         {
             var button = Instantiate(_itemButtonPrefab, _allParent);
-            button.Setup(i);
-            button.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
+            button.Setup(i, _itemButtonController, ItemButtonType.All);
+            button.SetIsUsedWindow(_isUsedWindow);
+            _allButtons.Add(button);
 
             ItemButton itemButton;
             switch (items[i].EffectType)
             {
                 case ItemEffectType.Healing:
                     itemButton = Instantiate(_itemButtonPrefab, _healingParent);
-                    itemButton.Setup(i);
-                    itemButton.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
+                    itemButton.Setup(i, _itemButtonController, ItemButtonType.Healing);
+                    itemButton.SetIsUsedWindow(_isUsedWindow);
+                    _healingButtons.Add(itemButton);
                     break;
                 case ItemEffectType.Attack:
                     itemButton = Instantiate(_itemButtonPrefab, _attackParent);
-                    itemButton.Setup(i);
-                    itemButton.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
+                    itemButton.Setup(i, _itemButtonController, ItemButtonType.Attack);
+                    itemButton.SetIsUsedWindow(_isUsedWindow);
+                    _attackButtons.Add(itemButton);
                     break;
                 case ItemEffectType.Support:
                     itemButton = Instantiate(_itemButtonPrefab, _supportParent);
-                    itemButton.Setup(i);
-                    itemButton.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
+                    itemButton.Setup(i, _itemButtonController, ItemButtonType.Support);
+                    itemButton.SetIsUsedWindow(_isUsedWindow);
+                    _supportButtons.Add(itemButton);
                     break;
                 case ItemEffectType.Valuables:
                     itemButton = Instantiate(_itemButtonPrefab, _valuablesParent);
-                    itemButton.Setup(i);
-                    itemButton.SetCheckItemIsUsedWindow(_checkItemIsUsedWindow);
+                    itemButton.Setup(i, _itemButtonController, ItemButtonType.Valuables);
+                    itemButton.SetIsUsedWindow(_isUsedWindow);
+                    _valuablesButtons.Add(itemButton);
                     break;
             }
         }
+        onComplete?.Invoke();
     }
 }

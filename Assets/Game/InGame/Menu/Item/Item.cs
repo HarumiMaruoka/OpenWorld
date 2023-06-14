@@ -8,7 +8,7 @@ public class Item
 {
     /// <summary> 所持数 </summary>
     [SerializeField] // jsonで保存するために左記の属性を付与する
-    private readonly IntReactiveProperty _inventoryCount = new IntReactiveProperty(0);
+    private readonly IntReactiveProperty _inventoryCount = new IntReactiveProperty(1);
     /// <summary> このアイテムのID </summary>
     private readonly int _id = -1;
     /// <summary> このアイテムの名前 </summary>

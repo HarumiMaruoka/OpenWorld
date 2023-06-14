@@ -123,7 +123,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1914754229}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -1109,6 +1109,9 @@ GameObject:
   - component: {fileID: 5659688711845858816}
   - component: {fileID: 1812229688}
   - component: {fileID: 996829574}
+  - component: {fileID: 3395766123184641516}
+  - component: {fileID: 4463240407968880893}
+  - component: {fileID: 3487724510371851349}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -1187,7 +1190,9 @@ MonoBehaviour:
   _rotationSpeed: 600
   _maxHorizontalSpeed: 5
   _maxVerticalSpeed: 30
-  _landingTime: 0.6
+  _landingTime: 0.34
+  _groundedGravity: 1000
+  _jumpTiem: 0.1
   _landInterval: 1
 --- !u!143 &830413756
 CharacterController:
@@ -1202,7 +1207,7 @@ CharacterController:
   serializedVersion: 2
   m_Height: 2
   m_Radius: 0.5
-  m_SlopeLimit: 45
+  m_SlopeLimit: 60
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
@@ -1223,7 +1228,7 @@ MonoBehaviour:
     _origin: {fileID: 449653295}
     _dir: {x: 0, y: -1, z: 0}
     _radius: 0.499
-    _maxDistance: 1.1
+    _maxDistance: 1.3
     _layerMask:
       serializedVersion: 2
       m_Bits: 320
@@ -1233,6 +1238,7 @@ MonoBehaviour:
   _moveSpeed: 6
   _moveDeceleration: 16
   _jumpPower: 16
+  _attackPower: 5
 --- !u!114 &5519168715015663745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1248,6 +1254,7 @@ MonoBehaviour:
   _moveSpeedParam: Move Speed
   _attackParam: Attack
   _midairParam: Midair
+  _avoidanceParam: IsAvoidance
 --- !u!114 &7924160921562413428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1336,7 +1343,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 835cb050f576f3d4585eb4fceff3ad6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _avoidanceTime: 0.556
   _avoidanceInterval: 0.2
+--- !u!114 &3395766123184641516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4636859774947064813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98383046e7450c84ba36dcc6677450a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerLife: {fileID: 6950944977246428537}
+  _playerMoneyController: {fileID: 3487724510371851349}
+--- !u!114 &4463240407968880893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4636859774947064813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86087398e44aa884ab4955024228a85f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerLife: {fileID: 6950944977246428537}
+  _playerMoneyController: {fileID: 3487724510371851349}
+--- !u!114 &3487724510371851349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4636859774947064813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad67e9cd454fbc849af12f0548c17170, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _initialFunds: 10000
 --- !u!1 &4664073259408450796
 GameObject:
   m_ObjectHideFlags: 0

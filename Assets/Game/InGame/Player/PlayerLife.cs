@@ -23,6 +23,10 @@ public class PlayerLife : MonoBehaviour, IDamageable
         _currentLife.Value = _maxLife;
         _playerInfo = GetComponent<PlayerInfo>();
     }
+    public void SetLife(float value)
+    {
+        _currentLife.Value = value;
+    }
     private void OnEnable()
     {
         _current = this;

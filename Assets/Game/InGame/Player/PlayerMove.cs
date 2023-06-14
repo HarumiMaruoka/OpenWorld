@@ -18,6 +18,8 @@ public class PlayerMove : MonoBehaviour
     private float _maxVerticalSpeed = 0f;
     [SerializeField]
     private float _landingTime = 1f;
+    [SerializeField]
+    private float _groundedGravity = 100f;
 
     private CharacterController _characterController = null;
     private PlayerInfo _playerInfo = null;
@@ -99,10 +101,13 @@ public class PlayerMove : MonoBehaviour
         {
             _currentVerticalSpeed.Value = _playerInfo.JumpPower;
         }
-        // 接地していれば速度は垂直速度は0。
+        // 接地していれば速度は接地専用の垂直速度。
         else
         {
-            _currentVerticalSpeed.Value = 0f;
+            if (_currentVerticalSpeed.Value > 0f)
+            {
+                _currentVerticalSpeed.Value = -_groundedGravity * Time.deltaTime;
+            }
         }
 
         // 水平方向の制御
@@ -146,6 +151,24 @@ public class PlayerMove : MonoBehaviour
 
         _characterController.Move(moveSpeed);
     }
+    [SerializeField]
+    private float _jumpTiem = 0.1f;
+
+    private async void Jump()
+    {
+        try
+        {
+            _playerInfo.AddState(PlayerState.Jump);
+            await UniTask.Delay((int)(_jumpTiem * 1000f), cancellationToken: this.GetCancellationTokenOnDestroy());
+            _playerInfo.RemoveState(PlayerState.Jump);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+    }
+
     [SerializeField]
     private float _landInterval = 0.6f;
 

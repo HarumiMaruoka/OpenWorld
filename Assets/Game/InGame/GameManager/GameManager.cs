@@ -16,4 +16,11 @@ public class GameManager : IDisposable
         _deviceManager = null;
         GC.Collect();
     }
+
+    private GameStartMode _gameStartMode = GameStartMode.NewGame;
+    public GameStartMode GameStartMode => _gameStartMode;
+    public void SetGameStartMode(GameStartMode gameStartMode)
+    {
+        _gameStartMode = gameStartMode;
+    }
 }

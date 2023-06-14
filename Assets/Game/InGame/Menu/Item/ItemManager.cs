@@ -7,7 +7,7 @@ using UnityEngine.AddressableAssets;
 
 public static class ItemManager
 {
-    private const int MaxItemID = 4;
+    public const int MaxItemID = 19;
     private static Item[] _itemData = null;
     private const string _itemDataCsvAddressableName = "Item Data Csv";
 
