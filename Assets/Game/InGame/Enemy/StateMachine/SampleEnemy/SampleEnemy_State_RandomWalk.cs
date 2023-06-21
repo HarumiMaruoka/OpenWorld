@@ -1,4 +1,5 @@
 // 日本語対応
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SampleEnemy_State_RandomWalk", menuName = "ScriptableObjects/SampleEnemyState/RandomWalk", order = 1)]
@@ -13,7 +14,7 @@ public class SampleEnemy_State_RandomWalk : EnemyStateBase
     }
     protected override void Enter()
     {
-        //Debug.Log("ランダムウォーク開始");
+        // Debug.Log("ランダムウォーク開始");
         _randomWalk.enabled = true;
     }
 

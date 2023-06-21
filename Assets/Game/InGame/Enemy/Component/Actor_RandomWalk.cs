@@ -1,3 +1,4 @@
+using UniRx;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -41,6 +42,8 @@ public class Actor_RandomWalk : MonoBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         RandomizeDirection();
+
+        TimeStopManager.IsTimeStop.Subscribe(TimeStop).AddTo(this);
     }
 
     private void Update()
@@ -50,6 +53,7 @@ public class Actor_RandomWalk : MonoBehaviour
 
     private void Move()
     {
+        if (_isTimeStop) return;
         // 方向転換のタイマーを更新
         _changeDirectionTimer -= Time.deltaTime;
         if (_changeDirectionTimer <= 0f)
@@ -100,6 +104,12 @@ public class Actor_RandomWalk : MonoBehaviour
         _changeDirectionTimer = Random.Range(_minChangeDirectionInterval, _maxChangeDirectionInterval);
         float randomAngle = Random.Range(0f, 360f);
         _currentDirection = randomAngle;
+    }
+
+    private bool _isTimeStop = false;
+    private void TimeStop(bool value)
+    {
+        _isTimeStop = value;
     }
 
 #if UNITY_EDITOR

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InGameDataRestorationBase : MonoBehaviour
 {
-    protected event Action OnLoad = default;
+    protected event Action<SaveLoadManager.SaveDataSet> OnLoad = default;
 
     protected virtual void OnEnable()
     {

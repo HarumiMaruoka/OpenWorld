@@ -373,6 +373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 109199ac321de124e9826fe8bd6ac7c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _nextSceneName: Main
   _button: {fileID: 391239940}
 --- !u!1 &409696385
 GameObject:
@@ -771,6 +772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f7a040da45e9b248903b6e88dd2359e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _nextSceneName: Main
   _button: {fileID: 1486114781}
 --- !u!1 &1730021841
 GameObject:

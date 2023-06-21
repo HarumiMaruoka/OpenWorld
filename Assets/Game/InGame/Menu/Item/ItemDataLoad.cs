@@ -9,12 +9,12 @@ public class ItemDataLoad : InGameDataRestorationBase
         OnLoad += Load;
     }
 
-    private async void Load()
+    private async void Load(SaveLoadManager.SaveDataSet saveData)
     {
         var items = await ItemManager.GetItemDataAll(this.GetCancellationTokenOnDestroy());
         for (int i = 0; i < items.Length; i++)
         {
-            items[i].LoadInventoryCount();
+            items[i].SetInventoryCount(saveData.ItemSaveData.InventoryCount[i]);
         }
     }
 }

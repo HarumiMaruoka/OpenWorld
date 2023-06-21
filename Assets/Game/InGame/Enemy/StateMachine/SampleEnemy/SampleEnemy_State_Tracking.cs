@@ -75,7 +75,18 @@ public class SampleEnemy_State_Tracking : EnemyStateBase
         if (_sampleEnemyController.QuestionMark.IsOpened)
             _sampleEnemyController.QuestionMark.Close();
         _sampleEnemyController.ExclamationMark.Open();
-        await UniTask.Delay((int)(_reactionTime * 1000f));
+
+        float timer = 0f;
+        while (timer < _reactionTime)
+        {
+            if (!TimeStopManager.IsTimeStop.Value)
+            {
+                timer += Time.deltaTime;
+            }
+            if (this == null) return;
+            await UniTask.Yield();
+        }
+
         _sampleEnemyController.ExclamationMark.Close();
     }
 }

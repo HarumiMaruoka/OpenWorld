@@ -46,7 +46,7 @@ public abstract class StateMachine<T> : MonoBehaviour where T : Enum
             return CurrentState.Value = clone;
         }
     }
-    private void Update()
+    protected virtual void Update()
     {
         CurrentState.Value.Execute();
     }

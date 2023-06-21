@@ -90,8 +90,11 @@ public class Item
         }
         foreach (var e in _itemEffectReceivers)
         {
-            if (_itemEffectFilter.CanUsedItem(itemUser, e))
-                e.ReceiveItemEffect(this, itemUser);
+            if (_itemEffectFilter == null)
+            { e.ReceiveItemEffect(); }
+
+            else if (_itemEffectFilter.CanUsedItem(itemUser, e))
+            { e.ReceiveItemEffect(); }
         }
         // 所持数を減らす。
         _inventoryCount.Value--;

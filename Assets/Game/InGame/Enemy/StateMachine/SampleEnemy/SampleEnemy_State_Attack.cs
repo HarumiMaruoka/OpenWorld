@@ -15,13 +15,14 @@ public class SampleEnemy_State_Attack : EnemyStateBase
     protected override void Enter()
     {
         //Debug.Log("攻撃開始");
-        _attack.Fire(_owner.GetCancellationTokenOnDestroy());
         _attack.OnAttackCompleted += OnAttackEnd;
+        _attack.Fire();
     }
 
     protected override void Exit()
     {
         //Debug.Log("攻撃終了");
+        _attack.OnAttackCompleted -= OnAttackEnd;
     }
 
     protected override void Update()

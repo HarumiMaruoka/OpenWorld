@@ -17,13 +17,13 @@ public class PlayerDataLoad : InGameDataRestorationBase
         OnLoad += Load;
     }
 
-    private void Load()
+    private void Load(SaveLoadManager.SaveDataSet saveData)
     {
         // プレイヤーの座標を復元する。
-        transform.position = SaveLoadManager.Load<Vector3>(_playerPosFileName);
+        transform.position = saveData.PlayerSaveData.Position;
         // プレイヤーのライフを復元する。
-        _playerLife.SetLife(SaveLoadManager.Load<float>(_playerLifeFileName));
+        _playerLife.SetLife(saveData.PlayerSaveData.Life);
         // プレイヤーの所持金を復元する。
-        _playerMoneyController.SetFunds(SaveLoadManager.Load<long>(_playerFundsFileName));
+        _playerMoneyController.SetFunds(saveData.PlayerSaveData.Funds);
     }
 }

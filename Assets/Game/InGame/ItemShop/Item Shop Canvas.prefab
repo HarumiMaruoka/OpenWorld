@@ -174,8 +174,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1280, y: 720}
+  m_AnchoredPosition: {x: 0, y: 124}
+  m_SizeDelta: {x: 1200, y: 634}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4217064599496048105
 CanvasRenderer:
@@ -280,7 +280,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.8301887}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1706,17 +1706,9 @@ MonoBehaviour:
   _fundsText: {fileID: 4217064600751989828}
   _products:
   - _itemID: 0
-    _cost: 200000
-  - _itemID: 0
-    _cost: 220
-  - _itemID: 1
-    _cost: 3000
+    _cost: 12
   - _itemID: 2
-    _cost: 1200000
-  - _itemID: 3
-    _cost: 1000
-  - _itemID: 2
-    _cost: 10
+    _cost: 20
 --- !u!1 &4217064600848457080
 GameObject:
   m_ObjectHideFlags: 0
@@ -1829,7 +1821,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -60}
+  m_AnchoredPosition: {x: 40, y: -60}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4217064600860228259
@@ -2076,7 +2068,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 4217064599497879125}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.8301887
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

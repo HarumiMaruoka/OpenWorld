@@ -22,7 +22,7 @@ public static class TalkManager
 
     public static bool IsPressedButton()
     {
-        return (Keyboard.current != null && (Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame)) ||
-               (Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame);
+        return (Keyboard.current != null && (Keyboard.current.enterKey.wasPressedThisFrame /*|| Keyboard.current.spaceKey.wasPressedThisFrame)*/) ||
+               (Gamepad.current != null && Gamepad.current.aButton.wasPressedThisFrame));
     }
 }

@@ -1,5 +1,6 @@
 // 日本語対応
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -8,38 +9,45 @@ using UnityEngine;
 /// <summary>
 /// セーブ機能とロード機能を司るクラス
 /// </summary>
-public class SaveLoadManager
+public static class SaveLoadManager
 {
-    public static event Action OnInGameDataSave = default;
-    public static event Action OnInGameDataLoad = default;
+    private const string _saveDataFileName = "SaveData";
+    private static PlayerSaveData _playerSaveData;
+    private static EnemySaveDataList _enemySaveDataList;
+    private static ItemSaveData _itemSaveData;
+    private static OutGameSaveData _outGameSaveData;
 
-    public static event Action OnOutGameDataSave = default;
-    public static event Action OnOutGameDataLoad = default;
+    public static event Action OnSaveSetup = default;
+    public static event Action OnSaveEnd = default;
+    public static event Action<SaveDataSet> OnInGameDataLoad = default;
 
+    public static void SetSaveData(PlayerSaveData playerSaveData)
+    {
+        _playerSaveData = playerSaveData;
+    }
+    public static void SetSaveData(EnemySaveDataList enemySaveDataList)
+    {
+        _enemySaveDataList = enemySaveDataList;
+    }
+    public static void SetSaveData(ItemSaveData itemSaveData)
+    {
+        _itemSaveData = itemSaveData;
+    }
+    public static void SetSaveData(OutGameSaveData outGameSaveData)
+    {
+        _outGameSaveData = outGameSaveData;
+    }
     public static void ExecuteInGameDataSave()
     {
-        OnInGameDataSave?.Invoke();
+        OnSaveSetup?.Invoke();
+        var saveData = new SaveDataSet(_playerSaveData, _enemySaveDataList, _itemSaveData, _outGameSaveData);
+        Save(saveData, _saveDataFileName);
+        OnSaveEnd?.Invoke();
     }
     public static void ExecuteInGameDataLoad()
     {
-        OnInGameDataLoad?.Invoke();
+        OnInGameDataLoad?.Invoke(Load<SaveDataSet>(_saveDataFileName));
     }
-    public static void ExecuteOutGameDataSave()
-    {
-        OnOutGameDataSave?.Invoke();
-    }
-    public static void ExecuteOutGameDataLoad()
-    {
-        OnOutGameDataLoad?.Invoke();
-    }
-
-    // AES設定値
-    // ======================================== //
-    private static int aesKeySize = 128;               // 鍵のサイズを指定する
-    private static int aesBlockSize = 128;             // 一つのブロックのサイズ
-    private static string aesIv = "6KGhH66PeU3cSLS7";  // 初期化ベクトル（Initialization Vectorの略称）
-    private static string aesKey = "R38FYEzPyjxv0HrE"; // 鍵
-    // ======================================== //
 
     /// <summary>
     /// 暗号化しオブジェクトをファイルに書きこむ機能
@@ -91,6 +99,94 @@ public class SaveLoadManager
             return default(T);
         }
     }
+
+    [Serializable]
+    public struct SaveDataSet
+    {
+        public SaveDataSet(PlayerSaveData playerSaveData, EnemySaveDataList enemySaveData,
+            ItemSaveData itemSaveData, OutGameSaveData outGameSaveData)
+        {
+            _playerSaveData = playerSaveData; _enemySaveData = enemySaveData;
+            _itemSaveData = itemSaveData; _outGameSaveData = outGameSaveData;
+        }
+
+        [SerializeField] private PlayerSaveData _playerSaveData;
+        [SerializeField] private EnemySaveDataList _enemySaveData;
+        [SerializeField] private ItemSaveData _itemSaveData;
+        [SerializeField] private OutGameSaveData _outGameSaveData;
+
+        public PlayerSaveData PlayerSaveData => _playerSaveData;
+        public EnemySaveDataList EnemySaveData => _enemySaveData;
+        public ItemSaveData ItemSaveData => _itemSaveData;
+        public OutGameSaveData OutGameSaveData => _outGameSaveData;
+    }
+    [Serializable]
+    public struct PlayerSaveData
+    {
+        public PlayerSaveData(Vector3 position, float life, long funds)
+        {
+            _position = position; _life = life; _funds = funds;
+        }
+        [SerializeField] private Vector3 _position;
+        [SerializeField] private float _life;
+        [SerializeField] private long _funds;
+
+        public Vector3 Position => _position;
+        public float Life => _life;
+        public long Funds => _funds;
+    }
+    [Serializable]
+    public class EnemySaveDataList
+    {
+        [SerializeField]
+        private List<EnemySaveData> _enemySaveDatas = new List<EnemySaveData>();
+
+        public List<EnemySaveData> EnemySaveDatas => _enemySaveDatas;
+    }
+
+    [Serializable]
+    public struct EnemySaveData
+    {
+        public EnemySaveData(int id, Vector3 position, float life)
+        {
+            _enemyID = id; _position = position; _life = life;
+        }
+
+        private int _enemyID; // このエネミーの種類を表現する
+        private Vector3 _position;
+        private float _life;
+
+        public int EnemyID => _enemyID;
+        public Vector3 Position => _position;
+        public float Life => _life;
+    }
+    [Serializable]
+    public struct ItemSaveData
+    {
+        public ItemSaveData(int[] inventoryCount)
+        {
+            _inventoryCount = inventoryCount;
+        }
+
+        // 添え字にIDを指定することで そのアイテムの所持数が取得できる。
+        [SerializeField]
+        private int[] _inventoryCount;
+
+        public int[] InventoryCount => _inventoryCount;
+    }
+    [Serializable]
+    public struct OutGameSaveData
+    {
+
+    }
+
+    // AES設定値
+    // ======================================== //
+    private static int aesKeySize = 128;               // 鍵のサイズを指定する
+    private static int aesBlockSize = 128;             // 一つのブロックのサイズ
+    private static string aesIv = "6KGhH66PeU3cSLS7";  // 初期化ベクトル（Initialization Vectorの略称）
+    private static string aesKey = "R38FYEzPyjxv0HrE"; // 鍵
+    // ======================================== //
 
     /// <summary> AES暗号化 </summary>
     /// <param name="byteText"> 暗号化するテキスト(バイト列) </param>

@@ -1,9 +1,10 @@
 // 日本語対応
-using UnityEngine;
 using DG.Tweening;
-using Cysharp.Threading.Tasks;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using System;
-using System.Threading;
+using UnityEngine;
+using UniRx;
 
 /// <summary>
 /// Sample enemy の攻撃状態を表現する。
@@ -38,19 +39,60 @@ public class SampleEnemyAttack : MonoBehaviour
     {
         _meshRenderer = GetComponent<MeshRenderer>();
     }
-    public async void Fire(CancellationToken token)
+    private void OnDisable()
     {
-        await _meshRenderer.material.DOColor(_explosionColor, _explosionDelay).ToUniTask(cancellationToken: token);
+        _currentAnim?.Kill();
+    }
+
+    public void Fire()
+    {
+        if (TimeStopManager.IsTimeStop.Value) { OnAttackCompleted?.Invoke(); return; }
+        StartFireAnim(() => this.Attack(() => this.EndFireAnim(() => OnAttackCompleted?.Invoke())));
+    }
+
+    TweenerCore<Color, Color, ColorOptions> _currentAnim = null;
+    IDisposable _disposable = null;
+
+    private void StartFireAnim(Action onComplete = null)
+    {
+        _disposable = TimeStopManager.IsTimeStop.Subscribe(value => { if (value) Pause(); else Resume(); });
+        _currentAnim = _meshRenderer.material.DOColor(_explosionColor, _explosionDelay).
+            OnComplete(() => { _currentAnim = null; onComplete?.Invoke(); });
+    }
+    private void Attack(Action onComplete = null)
+    {
+        if (this == null) return;
         Instantiate(_explosionEffectPrefab, transform.position, Quaternion.identity);
-        // ここに攻撃処理を記述する
         if (PlayerLife.Current != null &&
-            Vector3.SqrMagnitude(PlayerLife.Current.Transform.position - transform.position) < _attackRadius)
+               Vector3.SqrMagnitude(PlayerLife.Current.Transform.position - transform.position) < _attackRadius)
         {
             PlayerLife.Current.Damage(new AttackSet(default, _attackPower, default, default));
         }
-        await _meshRenderer.material.DOColor(_nomalColor, _recoveryDelay).ToUniTask(cancellationToken: token);
+        onComplete?.Invoke();
+    }
+    private void EndFireAnim(Action onComplete = null)
+    {
+        _currentAnim = _meshRenderer.material.DOColor(_nomalColor, _recoveryDelay).
+            OnComplete(() =>
+                {
+                    _currentAnim = null; onComplete?.Invoke();
+                    _disposable.Dispose(); _disposable = null;
+                });
+    }
 
-        OnAttackCompleted?.Invoke();
+    private void Pause()
+    {
+        if (_currentAnim != null)
+        {
+            _currentAnim.Pause();
+        }
+    }
+    private void Resume()
+    {
+        if (_currentAnim != null)
+        {
+            _currentAnim.Play();
+        }
     }
 
 #if UNITY_EDITOR

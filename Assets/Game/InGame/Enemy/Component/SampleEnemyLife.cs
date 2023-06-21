@@ -29,6 +29,10 @@ public class SampleEnemyLife : MonoBehaviour, IDamageable
         // 最大ライフを設定する
         _currentLife = (await EnemyDataBase.GetEnemyStatus(_myInfo.MyID, this.GetCancellationTokenOnDestroy())).MaxLife;
     }
+    public void SetLife(float value)
+    {
+        _currentLife = value;
+    }
     public void Damage(AttackSet value)
     {
         _currentLife -= value.AttackValue;

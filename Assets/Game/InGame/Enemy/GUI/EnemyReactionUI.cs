@@ -1,7 +1,9 @@
 // 日本語対応
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,11 +27,13 @@ public class EnemyReactionUI : MonoBehaviour
     private void Awake()
     {
         _image.rectTransform.localScale = Vector3.zero;
+        TimeStopManager.IsTimeStop.Subscribe(OnStop).AddTo(this);
     }
 
-    public virtual void Open()
+    public async virtual void Open()
     {
         if (_currentAnim != null) _currentAnim.Kill();
+        await UniTask.WaitUntil(() => !TimeStopManager.IsTimeStop.Value);
         _image.enabled = true;
         IsOpened = true;
         CurrentStatus = Status.Opening;
@@ -37,12 +41,28 @@ public class EnemyReactionUI : MonoBehaviour
             OnComplete(OnOpenAnimEnd);
     }
 
-    public virtual void Close()
+    public async virtual void Close()
     {
         if (_currentAnim != null) _currentAnim.Kill();
+        await UniTask.WaitUntil(() => !TimeStopManager.IsTimeStop.Value);
         CurrentStatus = Status.Closing;
         _currentAnim = _image.rectTransform.DOScale(Vector3.zero, _closeAnimDuration).SetEase(_ease).
                OnComplete(OnCloseAnimEnd);
+    }
+
+    private void OnStop(bool isStop)
+    {
+        if (_currentAnim != null)
+        {
+            if (isStop)
+            {
+                _currentAnim.Pause();
+            }
+            else
+            {
+                _currentAnim.Play();
+            }
+        }
     }
 
     private void OnOpenAnimEnd()

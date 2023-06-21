@@ -9,6 +9,11 @@ public class MenuController : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerInfo.CurrentPlayerInfo.CurrentState.Value.HasFlag(PlayerState.Talk))
+        {
+            return;
+        }
+
         if ((Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) ||
             (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame))
         {

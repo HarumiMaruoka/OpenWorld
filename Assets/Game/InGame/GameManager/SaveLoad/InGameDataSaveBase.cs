@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class InGameDataSaveBase : MonoBehaviour
 {
-    protected event Action OnSave = default;
+    protected event Action OnSaveSetup = default;
 
     protected virtual void OnEnable()
     {
-        SaveLoadManager.OnInGameDataSave += OnSave;
+        SaveLoadManager.OnSaveSetup += OnSaveSetup;
     }
     protected virtual void OnDisable()
     {
-        SaveLoadManager.OnInGameDataSave -= OnSave;
+        SaveLoadManager.OnSaveSetup -= OnSaveSetup;
     }
 }

@@ -9,4 +9,12 @@ public class EnemyInformation : MonoBehaviour
     [SerializeField]
     private int _myID = -1;
     public int MyID => _myID;
+
+    [SerializeField]
+    private SampleEnemyLife _life = default;
+
+    public void Load(Vector3 position, float value)
+    {
+        transform.position = position; _life.SetLife(value);
+    }
 }

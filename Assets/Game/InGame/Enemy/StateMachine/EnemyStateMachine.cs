@@ -3,6 +3,11 @@ using System;
 
 public class EnemyStateMachine : StateMachine<EnemyConditionList>
 {
+    protected override void Update()
+    {
+        if (TimeStopManager.IsTimeStop.Value) return;
+        base.Update();
+    }
     public override void ClearCondition()
     {
         Conditions = 0;

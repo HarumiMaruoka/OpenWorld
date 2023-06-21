@@ -20,6 +20,7 @@ public class ItemShopExplanatoryTextController : MonoBehaviour
     }
     private async void OnChangedSelectedObject(GameObject _, GameObject newObj)
     {
+        if (newObj == null) return;
         if (newObj.TryGetComponent(out ItemShopProductButton button))
         {
             _explanatoryText.text =

@@ -17,6 +17,7 @@ public class PlayerLife : MonoBehaviour, IDamageable
     private PlayerInfo _playerInfo = null;
     public Transform Transform => transform;
     public IReadOnlyReactiveProperty<float> CurrentLife => _currentLife;
+    public float MaxLife => _maxLife;
 
     private void Awake()
     {
@@ -50,5 +51,13 @@ public class PlayerLife : MonoBehaviour, IDamageable
             this.gameObject.SetActive(false);
         }
     }
+    public void Heal(float value)
+    {
+        _currentLife.Value = _currentLife.Value + value;
 
+        if (_currentLife.Value > _maxLife)
+        {
+            _currentLife.Value = _maxLife;
+        }
+    }
 }

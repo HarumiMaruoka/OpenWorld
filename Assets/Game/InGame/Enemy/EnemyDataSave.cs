@@ -5,42 +5,30 @@ using UnityEngine;
 // エネミー自身にアタッチする
 public class EnemyDataSave : InGameDataSaveBase
 {
-    private readonly string _enemySaveDataFileName = "EnemySaveData";
 
-    private static HashSet<EnemySaveDataSet> _enemySaveData = new HashSet<EnemySaveDataSet>();
+    private readonly static SaveLoadManager.EnemySaveDataList _enemySaveDataList = new SaveLoadManager.EnemySaveDataList();
 
-    private EnemySaveDataSet _saveDataSet;
+    private SampleEnemyLife _sampleEnemyLife = null;
 
     private void Awake()
     {
-        OnSave += Save;
-        _enemySaveData.Add(_saveDataSet);
-        _saveDataSet = new EnemySaveDataSet(transform, GetComponent<SampleEnemyLife>());
+        OnSaveSetup += SaveSetup;
+        SaveLoadManager.OnSaveEnd += Saved;
+        _sampleEnemyLife = GetComponent<SampleEnemyLife>();
+        SaveLoadManager.SetSaveData(new SaveLoadManager.EnemySaveDataList());
     }
     private void OnDestroy()
     {
-        _enemySaveData.Remove(_saveDataSet);
+        OnSaveSetup -= SaveSetup;
+        SaveLoadManager.OnSaveEnd -= Saved;
     }
 
-    private void Save()
+    private void SaveSetup()
     {
-        SaveLoadManager.Save(_enemySaveData, _enemySaveDataFileName);
+        _enemySaveDataList.EnemySaveDatas.Add(new SaveLoadManager.EnemySaveData(0, transform.position, _sampleEnemyLife.CurrentLife));
     }
-}
-
-[System.Serializable]
-public struct EnemySaveDataSet
-{
-    public EnemySaveDataSet(Transform pos, SampleEnemyLife life)
+    private void Saved()
     {
-        _position = pos; _life = life;
+        _enemySaveDataList.EnemySaveDatas.Clear();
     }
-
-    [SerializeField]
-    private Transform _position;
-    [SerializeField]
-    private SampleEnemyLife _life;
-
-    public Transform Position => _position;
-    public SampleEnemyLife Life => _life;
 }

@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -23,6 +21,8 @@ public class Evolve : MonoBehaviour
     Vector3 _startPos; //展開位置
     List<Renderer> _objectRenders = new List<Renderer>(); //マテリアルを追加したレンダラ
 
+    public bool IsEvolved => _isEvolved;
+
     //確認用のSerializeField(消していい)
     [SerializeField] Material _instancedMat;
 
@@ -41,18 +41,11 @@ public class Evolve : MonoBehaviour
     void Update()
     {
         //test code
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             //StartEvolveを呼べばあとは良い感じになる
             StartEvolve();
         }
-        /*
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            EndEvolve();
-        }
-        */
-        //
 
         if (_isEvolved && _evolveTimer < _expandTime)
         {
@@ -71,6 +64,7 @@ public class Evolve : MonoBehaviour
                 _evolveTimer = 0.0f;
                 _areaSize = 0.0f;
                 RemoveMaterials();
+                TimeStopManager.ResumeTime();
             }
         }
 
@@ -107,15 +101,15 @@ public class Evolve : MonoBehaviour
 
         //マテリアルを差しこんでいく
         _objectRenders.Clear();
-        
+
         //重いから軽量化するならしたほうがいい
         //ロバストな処理優先
         var list = GameObject.FindObjectsOfType<GameObject>();
-        foreach ( var obj in list )
+        foreach (var obj in list)
         {
             //レンダラを持つ近くのオブジェクトにだけMaterialを仕込んでいく
             var renderer = obj.GetComponentInChildren<Renderer>();
-            if(renderer != null)
+            if (renderer != null)
             {
                 Vector3 len = obj.transform.position - _startPos;
                 if (len.magnitude < _maxAreaSize)
@@ -129,6 +123,7 @@ public class Evolve : MonoBehaviour
         }
 
         // Debug.Log("Start");
+        TimeStopManager.PauseTime();
     }
 
     /// <summary>
@@ -138,7 +133,6 @@ public class Evolve : MonoBehaviour
     {
         _isEvolved = false;
         // Debug.Log("End");
-
         //NOTE: 縮小させるときは外す
         _evolveTimer = _eraseTime;
     }

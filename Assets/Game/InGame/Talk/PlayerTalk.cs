@@ -30,6 +30,11 @@ public class PlayerTalk : MonoBehaviour, ITalkEventTrigger
             _info.AddState(PlayerState.Talk);
             talker.PlayTalk(TalkEnd);
         }
+        else if (TalkManager.IsPressedButton() && ForwardConfirmation(out ItemShopOwner shopOwner))
+        {
+            _info.AddState(PlayerState.Talk);
+            shopOwner.Execute(TalkEnd);
+        }
     }
     private async void TalkEnd()
     {
@@ -38,13 +43,13 @@ public class PlayerTalk : MonoBehaviour, ITalkEventTrigger
         await UniTask.Delay((int)(_talkInterval * 1000f));
         _isTalkInterval = false;
     }
-    private bool ForwardConfirmation(out ITalker talker)
+    private bool ForwardConfirmation<T>(out T talker) where T : class
     {
         RaycastHit raycastHit;
         _raycast.IsHit(transform, out raycastHit);
         if (raycastHit.collider != null)
         {
-            raycastHit.collider.TryGetComponent(out ITalker rayTalker);
+            raycastHit.collider.TryGetComponent(out T rayTalker);
             talker = rayTalker;
         }
         else
@@ -53,6 +58,7 @@ public class PlayerTalk : MonoBehaviour, ITalkEventTrigger
         }
         return talker != null;
     }
+
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {

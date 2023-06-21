@@ -18,6 +18,7 @@ public class SampleEnemy_State_Search : EnemyStateBase
         _sampleEnemySearch = _owner.GetComponent<SampleEnemySearch>();
         _enemySight = _owner.GetComponent<EnemySight>();
         _sampleEnemyController = _owner.GetComponent<SampleEnemyController>();
+        _sampleEnemySearch.OnSearchCompleted += OnSearchEnd;
     }
     protected override void Enter()
     {
@@ -26,8 +27,6 @@ public class SampleEnemy_State_Search : EnemyStateBase
         Reaction();
 
         _isFindPlayer = false;
-
-        _sampleEnemySearch.OnSearchCompleted += OnSearchEnd;
 
         var token = _cancellationTokenSource.Token;
         var linkedToken = CancellationTokenSource.CreateLinkedTokenSource(_owner.GetCancellationTokenOnDestroy(), token).Token;
@@ -39,7 +38,7 @@ public class SampleEnemy_State_Search : EnemyStateBase
     protected override void Exit()
     {
         //Debug.Log("プレイヤー探し終了");
-
+        _sampleEnemySearch.Kill();
     }
 
     protected override void Update()
@@ -49,6 +48,7 @@ public class SampleEnemy_State_Search : EnemyStateBase
         {
             _cancellationTokenSource.Cancel();
             _owner.RemoveCondition(EnemyConditionList.Search);
+            OnSearchEnd();
             _isFindPlayer = true;
         }
     }

@@ -6,15 +6,23 @@ public class ItemDataSave : InGameDataSaveBase
 {
     private void Awake()
     {
-        OnSave += Save;
+        OnSaveSetup += SaveSetup;
+    }
+    private void OnDestroy()
+    {
+        OnSaveSetup -= SaveSetup;
     }
 
-    private async void Save()
+    private async void SaveSetup()
     {
         var items = await ItemManager.GetItemDataAll(this.GetCancellationTokenOnDestroy());
-        for (int i = 0; i < items.Length; i++)
+
+        var saveData = new int[items.Length];
+        for (int i = 0; i < saveData.Length; i++)
         {
-            items[i].SaveInventoryCount();
+            saveData[i] = items[i].InventoryCount.Value;
         }
+
+        SaveLoadManager.SetSaveData(new SaveLoadManager.ItemSaveData(saveData)); ;
     }
 }

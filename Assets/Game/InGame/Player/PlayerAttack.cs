@@ -34,6 +34,8 @@ public class PlayerAttack : MonoBehaviour
     private void Fire(InputAction.CallbackContext callbackContext)
     {
         if (!_info.IsGrounded.Value) return; // 空中では攻撃しない
+        if (_info.CurrentState.Value.HasFlag(PlayerState.Talk)) return;
+
         _playerMove.Stop();
 
         _isAttacking.Value = true;
